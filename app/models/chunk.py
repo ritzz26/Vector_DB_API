@@ -7,5 +7,5 @@ class Chunk(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
     content: str
     embedding: List[float]
-    metadata: Dict[str, str] = {}
+    metadata: Dict[str, str] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
