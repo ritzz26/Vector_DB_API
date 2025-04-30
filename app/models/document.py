@@ -8,5 +8,5 @@ class Document(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
     title: str
     chunks: List[Chunk] = Field(default_factory=list)
-    metadata: Dict[str, str] = {}
+    metadata: Dict[str, str] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
