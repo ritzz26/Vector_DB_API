@@ -8,6 +8,6 @@ class Library(BaseModel):
     id: str = Field(default_factory=lambda: str(uuid4()))
     name: str
     description: Optional[str] = None
-    documents: List[Document] = []
-    metadata: Dict[str, str] = {}
+    documents: List[Document] = Field(default_factory=list)
+    metadata: Dict[str, str] = Field(default_factory=dict)
     created_at: datetime = Field(default_factory=datetime.utcnow)
