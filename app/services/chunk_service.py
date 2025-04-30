@@ -8,5 +8,5 @@ def add_chunk(library_id: str, document_id: str, chunk: Chunk) -> bool:
 def delete_chunk(library_id: str, document_id: str, chunk_id: str) -> bool:
     return store.delete_chunk(library_id, document_id, chunk_id)
 
-def get_all_chunks(library_id: str) -> Optional[list[Chunk]]:
+def get_all_chunks(library_id: str) -> Optional[List[Chunk]]:
     return store.get_all_chunks(library_id)
