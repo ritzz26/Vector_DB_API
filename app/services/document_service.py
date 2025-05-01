@@ -1,6 +1,6 @@
 from typing import Optional
 from app.models.document import Document
-from app.db.store import store  # reuse the same global store
+from app.db import store
 
 def add_document(library_id: str, document: Document) -> bool:
     return store.add_document(library_id, document)
