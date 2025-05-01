@@ -1,4 +1,4 @@
-from typing import Optional
+from typing import Optional, List
 from app.models.chunk import Chunk
 from app.db.store import store
 
