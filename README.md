@@ -34,7 +34,7 @@ A collection of documents with metadata.
 
 ## Getting Started
 
-### Install Dependencies
+### Install Dependencies (Recommended Python 3.11)
 
 ```bash
 python -m venv venv
@@ -107,7 +107,7 @@ make helm-install
 ### Access the API
 
 ```bash
-kubectl port-forward svc/vector-db-api 8000:8000
+make port-forward
 ```
 
 > Access at `http://localhost:8000/docs`
@@ -152,8 +152,18 @@ Interactive Swagger UI provided by FastAPI.
 
 ---
 
+## Developer Notes
+
+- Python version required: 3.11.x
+- `.python-version` included for pyenv users
+- use `make` for all common dev and deployment tasks
 
 ## TODO for the future
 
 - Add metadata filtering
 - Add advanced index structures (KD-Tree, HNSW)
+- Authentication using OAuth2 or JWT
+
+## License
+
+MIT License
