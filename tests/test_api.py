@@ -22,7 +22,6 @@ def test_create_and_get_library():
     assert get_resp.json()["id"] == lib_data["id"]
 
 def test_add_document_to_library():
-    # Create library first
     lib_id = str(uuid4())
     client.post("/api/v1/libraries/", json={
         "id": lib_id,
@@ -51,7 +50,6 @@ def test_chunk_and_search():
     doc_id = str(uuid4())
     chunk_id = str(uuid4())
 
-    # Setup
     client.post("/api/v1/libraries/", json={
         "id": lib_id,
         "name": "SearchLib",
@@ -75,7 +73,6 @@ def test_chunk_and_search():
     }
     client.post(f"/api/v1/libraries/{lib_id}/documents/{doc_id}/chunks/", json=chunk)
 
-    # Search
     search = {
         "library_id": lib_id,
         "embedding": [0.1, 0.2, 0.3],
