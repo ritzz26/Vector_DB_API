@@ -1,0 +1,12 @@
+replicaCount: 1
+
+image:
+  repository: vector-db-api
+  tag: latest
+  pullPolicy: IfNotPresent
+
+service:
+  type: ClusterIP
+  port: 8000
+
+resources: {}
