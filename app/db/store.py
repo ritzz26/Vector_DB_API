@@ -3,6 +3,7 @@ from typing import Dict, Optional
 from app.models.library import Library
 from app.models.document import Document
 from app.models.chunk import Chunk
+from app.db.persistence import save_state, load_state
 
 class InMemoryVectorStore:
     """
@@ -18,8 +19,9 @@ class InMemoryVectorStore:
         """
         Initialize the store with empty libraries dictionary and reentrant lock.
         """
-        self.libraries: Dict[str, Library] = {}
         self.lock = threading.RLock()
+        self.libraries: Dict[str, Library] = load_state()
+        
 
     def add_library(self, library: Library) -> None:
         """
@@ -33,6 +35,7 @@ class InMemoryVectorStore:
         """
         with self.lock:
             self.libraries[library.id] = library
+            save_state(self.libraries)
 
     def get_library(self, library_id: str) -> Optional[Library]:
         """
@@ -61,6 +64,7 @@ class InMemoryVectorStore:
         with self.lock:
             if library_id in self.libraries:
                 self.libraries[library_id] = updated
+                save_state(self.libraries)
                 return True
             return False
 
@@ -75,7 +79,10 @@ class InMemoryVectorStore:
             bool: True if library was found and deleted, False otherwise
         """
         with self.lock:
-            return self.libraries.pop(library_id, None) is not None
+            result = self.libraries.pop(library_id, None) is not None
+            if result:
+                save_state(self.libraries)
+            return result
 
     def list_libraries(self) -> Dict[str, Library]:
         """
@@ -102,6 +109,7 @@ class InMemoryVectorStore:
             lib = self.libraries.get(library_id)
             if lib:
                 lib.documents.append(document)
+                save_state(self.libraries)
                 return True
             return False
 
@@ -138,7 +146,9 @@ class InMemoryVectorStore:
             if lib:
                 original_len = len(lib.documents)
                 lib.documents = [doc for doc in lib.documents if doc.id != document_id]
-                return len(lib.documents) != original_len
+                if len(lib.documents) != original_len:
+                    save_state(self.libraries)
+                return True
             return False
 
     def add_chunk(self, library_id: str, document_id: str, chunk: Chunk) -> bool:
@@ -157,6 +167,7 @@ class InMemoryVectorStore:
             doc = self.get_document(library_id, document_id)
             if doc:
                 doc.chunks.append(chunk)
+                save_state(self.libraries)
                 return True
             return False
 
@@ -177,7 +188,9 @@ class InMemoryVectorStore:
             if doc:
                 original_len = len(doc.chunks)
                 doc.chunks = [c for c in doc.chunks if c.id != chunk_id]
-                return len(doc.chunks) != original_len
+                if len(doc.chunks) != original_len:
+                    save_state(self.libraries)
+                    return True
             return False
 
     def get_all_chunks(self, library_id: str) -> Optional[list[Chunk]]:
