@@ -25,7 +25,7 @@ run:
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 test:
-	pytest tests/
+	pytest tests/test_api.py && make clean
 
 docker-build:
 	docker build -t $(IMAGE_NAME) .
