@@ -1,6 +1,6 @@
 from typing import Optional, List
 from app.models.chunk import Chunk
-from app.db.store import store
+from app.db import store
 
 def add_chunk(library_id: str, document_id: str, chunk: Chunk) -> bool:
     return store.add_chunk(library_id, document_id, chunk)

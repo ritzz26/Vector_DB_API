@@ -1,8 +1,6 @@
 from typing import List, Optional
 from app.models.library import Library
-from app.db.store import InMemoryVectorStore
-
-store = InMemoryVectorStore()
+from app.db import store
 
 def create_library(library: Library) -> Library:
     store.add_library(library)
