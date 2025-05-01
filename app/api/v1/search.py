@@ -14,7 +14,7 @@ class SearchQuery(BaseModel):
 @router.post("/", response_model=List[Chunk])
 def search(query: SearchQuery):
     chunks = chunk_service.get_all_chunks(query.library_id)
-    if chunks is None:
+    if not chunks:
         raise HTTPException(status_code=404, detail="Library not found")
 
     top_k = knn_service.knn_search(chunks, query.embedding, k=query.k)
