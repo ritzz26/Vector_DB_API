@@ -60,8 +60,6 @@ http://localhost:8000/docs
 make test
 ```
 
-Uses Pytest with automatic `PYTHONPATH` handling.
-
 ---
 
 ## Docker Usage
@@ -116,18 +114,6 @@ kubectl port-forward svc/vector-db-api 8000:8000
 
 ---
 
-## Authentication
-
-All API endpoints require an API key header:
-
-```
-Authorization: Bearer changeme
-```
-
-> This can be modified in `app/utils/auth.py`.
-
----
-
 ## Persistence
 
 The system saves state to `db_state.json` on every update, ensuring that data survives container or pod restarts.
@@ -167,11 +153,7 @@ Interactive Swagger UI provided by FastAPI.
 ---
 
 
-## Notes and TODO for Production Launch
+## TODO for the future
 
-- [x] Add disk persistence
-- [x] Add API key authentication
-- [x] Add Kubernetes Helm chart
-- [x] Add CI with GitHub Actions
-- [ ] (Optional) Add metadata filtering
-- [ ] (Optional) Add advanced index structures (KD-Tree, HNSW)
+- Add metadata filtering
+- Add advanced index structures (KD-Tree, HNSW)
