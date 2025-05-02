@@ -99,11 +99,11 @@ make port-forward
 - Best for small datasets
 
 ### Grid-based Index (Buckets)
-- O(1) lookup + local search
+- O(1) lookup + local search, O(N) space
 - Fast for evenly distributed vectors
 
 ### Sorted List Index (by norm)
-- O(log N + K) query time
+- O(log N + K) query time, O(N) space
 - Good for structured data
 
 Choose index type per `KNNService`:
