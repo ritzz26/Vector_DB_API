@@ -7,7 +7,7 @@ Designed for ease of use, containerization, and Kubernetes deployment.
 ---
 
 ## Project Structure 
-```
+```bash
 root/
 ├── .dockerignore
 ├── .python-version
@@ -67,8 +67,13 @@ make test
 
 ### Build and run
 
+Build
 ```bash
 make docker-build
+```
+
+Run
+```bash
 make docker-run
 ```
 
@@ -89,15 +94,15 @@ make port-forward
 
 ## Indexing Algorithms
 
-### 1. Linear Scan (Brute Force)
+### Linear Scan (Brute Force)
 - O(N) time, O(N) space
 - Best for small datasets
 
-### 2. Grid-based Index (Buckets)
+### Grid-based Index (Buckets)
 - O(1) lookup + local search
 - Fast for evenly distributed vectors
 
-### 3. Sorted List Index (by norm)
+### Sorted List Index (by norm)
 - O(log N + K) query time
 - Good for structured data
 
