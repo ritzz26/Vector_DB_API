@@ -32,5 +32,5 @@ def load_state():
                         chunk["created_at"] = datetime.fromisoformat(chunk["created_at"])
             return {lib["id"]: Library(**lib) for lib in data}
     except json.JSONDecodeError as e:
-        logging.error("Failed to decode JSON from %s: %s", DB_FILE, e, exc_info=True)
+        print("Failed to decode JSON from %s: %s", DB_FILE, e, exc_info=True)
         return {}
