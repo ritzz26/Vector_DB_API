@@ -164,7 +164,7 @@ Interactive Swagger UI provided by FastAPI.
     - Hash vectors into buckets based on the embedding dimensions. Search is limited to the bucket and its neighbors
     - Time Complexity: O(K) (K neighbors in the bucket)
     - Space Complexity: O(N)
-    - Speeds up searhc when vectors are evenly distirbuted.
+    - Speeds up search when vectors are evenly distributed.
 
 3. Sorted List Index:
     - Store vectors sorted by their L2 norms. Use binary searhc to narrow down candidates. 
