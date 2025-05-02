@@ -8,26 +8,21 @@ Designed for ease of use, containerization, and Kubernetes deployment.
 
 ## Project Structure 
 ```bash
-root/
-├── .dockerignore
-├── .python-version
-├── Dockerfile
-├── Makefile
-├── README.md
-├── requirements.txt
+vector-db-api/
 ├── app/
-│   ├── __init__.py
-│   ├── main.py
-│   ├── models/
-│   ├── api/
-│   ├── db/
-│   ├── services/
-├── tests/
-├── helmchart/
-│   ├── Chart.yaml
-│   ├── values.yaml
-│   └── templates/
-└── db_state.json (generated at runtime)
+│   ├── api/               # FastAPI routes
+│   ├── models/            # Pydantic schemas
+│   ├── services/          # Business logic + indexing
+│   ├── db/                # Persistence layer
+│   └── utils/             # Auth utilities
+├── tests/                 # Pytest unit + integration tests
+├── helmchart/             # Helm chart for Kubernetes
+├── Dockerfile             # Docker image definition
+├── .dockerignore
+├── requirements.txt
+├── Makefile
+└── README.md
+└── db_state.json          # For persistance
 ```
 
 
@@ -77,34 +72,41 @@ Run
 make docker-run
 ```
 
+or manually:
+```bash
+docker build -t vector-db-api .
+docker run -p 8000:8000 vector-db-api
+```
+
 ---
 
-## Kubernetes Deployment (Minikube)
-
+## Helm Deployment (Minikube)
 ```bash
-minikube start
-make minikube-load
-make helm-install
-make port-forward
+make all
 ```
 
 > Access at `http://localhost:8000/docs`
 
 ---
 
-## Indexing Algorithms
+## Technical Decisions for Indexing Algorithms
+1. Linear Scan (Brute Force):
+    - Compare the query vector to every stored chunk vector
+    - Time Complexity: O(N)
+    - Space Complexity: O(N)
+    - Simple and effective for small to medium datasets. Works reliably and doesn't need pre-processing which can reduce costs
 
-### Linear Scan (Brute Force)
-- O(N) time, O(N) space
-- Best for small datasets
+2. Grid-based Index:
+    - Hash vectors into buckets based on the embedding dimensions. Search is limited to the bucket and its neighbors
+    - Time Complexity: O(K) (K neighbors in the bucket)
+    - Space Complexity: O(N)
+    - Speeds up search when vectors are evenly distributed.
 
-### Grid-based Index (Buckets)
-- O(1) lookup + local search, O(N) space
-- Fast for evenly distributed vectors
-
-### Sorted List Index (by norm)
-- O(log N + K) query time, O(N) space
-- Good for structured data
+3. Sorted List Index:
+    - Store vectors sorted by their L2 norms. Use binary search to narrow down candidates. 
+    - Time Complexity: O(log N + K)
+    - Space Complexity: O(N)
+    - Effective when norms correlate with similarity and reduces search space. 
 
 Choose index type per `KNNService`:
 
@@ -150,27 +152,6 @@ http://localhost:8000/docs
 ```
 
 Interactive Swagger UI provided by FastAPI.
-
----
-
-## Technical Decisions for Indexing Algorithms
-1. Linear Scan (Brute Force):
-    - Compare the query vector to every stored chunk vector
-    - Time Complexity: O(N)
-    - Space Complexity: O(N)
-    - Simple and effective for small to medium datasets. Works reliably and doesn't need pre-processing which can reduce costs
-
-2. Grid-based Index:
-    - Hash vectors into buckets based on the embedding dimensions. Search is limited to the bucket and its neighbors
-    - Time Complexity: O(K) (K neighbors in the bucket)
-    - Space Complexity: O(N)
-    - Speeds up search when vectors are evenly distributed.
-
-3. Sorted List Index:
-    - Store vectors sorted by their L2 norms. Use binary search to narrow down candidates. 
-    - Time Complexity: O(log N + K)
-    - Space Complexity: O(N)
-    - Effective when norms correlate with similarity and reduces search space. 
 
 ---
 

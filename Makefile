@@ -18,8 +18,7 @@ help:
 	@echo "  make clean          Remove __pycache__ and .pyc files"
 
 setup:
-	python3 -m venv $(VENV)
-	. $(VENV)/bin/activate && pip install --upgrade pip && pip install -r requirements.txt
+	pip install --upgrade pip && pip install -r requirements.txt
 
 run:
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
