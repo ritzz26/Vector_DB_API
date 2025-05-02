@@ -98,7 +98,7 @@ make all
 
 2. Grid-based Index:
     - Hash vectors into buckets based on the embedding dimensions. Search is limited to the bucket and its neighbors
-    - Time Complexity: O(K) (K neighbors in the bucket)
+    - Time Complexity: O(1) + local search
     - Space Complexity: O(N)
     - Speeds up search when vectors are evenly distributed.
 
