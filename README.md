@@ -167,7 +167,7 @@ Interactive Swagger UI provided by FastAPI.
     - Speeds up search when vectors are evenly distributed.
 
 3. Sorted List Index:
-    - Store vectors sorted by their L2 norms. Use binary searhc to narrow down candidates. 
+    - Store vectors sorted by their L2 norms. Use binary search to narrow down candidates. 
     - Time Complexity: O(log N + K)
     - Space Complexity: O(N)
     - Effective when norms correlate with similarity and reduces search space. 
