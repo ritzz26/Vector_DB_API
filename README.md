@@ -6,29 +6,30 @@ Designed for ease of use, containerization, and Kubernetes deployment.
 
 ---
 
-## Features
+## Project Structure 
+```
+root/
+├── .dockerignore
+├── .python-version
+├── Dockerfile
+├── Makefile
+├── README.md
+├── requirements.txt
+├── app/
+│   ├── __init__.py
+│   ├── main.py
+│   ├── models/
+│   ├── api/
+│   ├── db/
+│   ├── services/
+├── tests/
+├── helmchart/
+│   ├── Chart.yaml
+│   ├── values.yaml
+│   └── templates/
+└── db_state.json (generated at runtime)
+```
 
-- CRUD operations for Libraries, Documents, and Chunks
-- k-Nearest Neighbor search (cosine similarity)
-- Thread-safe in-memory store
-- Disk persistence (state saved and restored on restart)
-- Simple API Key authentication for all endpoints
-- Dockerized for easy deployment
-- Kubernetes ready (Helm chart included)
-- GitHub Actions CI for test automation
-
----
-
-## Core Concepts
-
-### Chunk
-A piece of text with an embedding and metadata.
-
-### Document
-A collection of chunks with metadata.
-
-### Library
-A collection of documents with metadata.
 
 ---
 
@@ -149,6 +150,27 @@ http://localhost:8000/docs
 ```
 
 Interactive Swagger UI provided by FastAPI.
+
+---
+
+## Technical Decisions for Indexing Algorithms
+1. Linear Scan (Brute Force):
+    - Compare the query vector to every stored chunk vector
+    - Time Complexity: O(N)
+    - Space Complexity: O(N)
+    - Simple and effective for small to medium datasets. Works reliably and doesn't need pre-processing which can reduce costs
+
+2. Grid-based Index:
+    - Hash vectors into buckets based on the embedding dimensions. Search is limited to the bucket and its neighbors
+    - Time Complexity: O(K) (K neighbors in the bucket)
+    - Space Complexity: O(N)
+    - Speeds up searhc when vectors are evenly distirbuted.
+
+3. Sorted List Index:
+    - Store vectors sorted by their L2 norms. Use binary searhc to narrow down candidates. 
+    - Time Complexity: O(log N + K)
+    - Space Complexity: O(N)
+    - Effective when norms correlate with similarity and reduces search space. 
 
 ---
 

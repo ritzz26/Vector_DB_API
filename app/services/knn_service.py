@@ -1,13 +1,57 @@
-from typing import List, Tuple
+# app/services/knn_service.py
+
+from app.services.vector_index import VectorIndexManager
 from app.models.chunk import Chunk
-import math
+from typing import List, Tuple, Dict
 
-def cosine_similarity(vec1: List[float], vec2: List[float]) -> float:
-    dot = sum(a * b for a, b in zip(vec1, vec2))
-    norm1 = math.sqrt(sum(a * a for a in vec1))
-    norm2 = math.sqrt(sum(b * b for b in vec2))
-    return dot / (norm1 * norm2 + 1e-8)
+class KNNService:
+    """
+    Handles indexing and searching chunks using VectorIndexManager.
+    """
 
-def knn_search(chunks: List[Chunk], query_vector: List[float], k: int = 5) -> List[Tuple[Chunk, float]]:
-    scored = [(chunk, cosine_similarity(chunk.embedding, query_vector)) for chunk in chunks]
-    return sorted(scored, key=lambda x: x[1], reverse=True)[:k]
+    def __init__(self, index_type: str = "linear"):
+        self.index_manager = VectorIndexManager(index_type=index_type)
+        self.chunk_lookup: Dict[str, Chunk] = {}
+
+    def index_chunk(self, chunk: Chunk):
+        """
+        Index a chunk's embedding for search.
+        """
+        self.index_manager.add(chunk.id, chunk.embedding)
+        self.chunk_lookup[chunk.id] = chunk
+
+    def search(self, query_embedding: List[float], k: int) -> List[Tuple[Chunk, float]]:
+        """
+        Search for k nearest chunks based on query embedding.
+
+        Returns:
+            List of tuples (Chunk, similarity score)
+        """
+        results = self.index_manager.search(query_embedding, k)
+        return [(self.chunk_lookup[chunk_id], score) for chunk_id, score in results]
+
+    def index_chunks_bulk(self, chunks: List[Chunk]):
+        """
+        Bulk index chunks.
+        """
+        for chunk in chunks:
+            self.index_chunk(chunk)
+
+
+# Example usage
+if __name__ == "__main__":
+    from app.models.chunk import Chunk
+
+    chunks = [
+        Chunk(id="c1", text="First chunk", embedding=[0.1, 0.2, 0.3]),
+        Chunk(id="c2", text="Second chunk", embedding=[0.11, 0.21, 0.31]),
+        Chunk(id="c3", text="Third chunk", embedding=[0.9, 0.8, 0.7]),
+    ]
+
+    service = KNNService(index_type="grid")
+    service.index_chunks_bulk(chunks)
+
+    results = service.search([0.1, 0.2, 0.3], k=2)
+
+    for chunk, score in results:
+        print(f"Found: {chunk.id} with score {score}")
