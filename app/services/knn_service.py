@@ -43,9 +43,9 @@ if __name__ == "__main__":
     from app.models.chunk import Chunk
 
     chunks = [
-        Chunk(id="c1", text="First chunk", embedding=[0.1, 0.2, 0.3]),
-        Chunk(id="c2", text="Second chunk", embedding=[0.11, 0.21, 0.31]),
-        Chunk(id="c3", text="Third chunk", embedding=[0.9, 0.8, 0.7]),
+        Chunk(id="c1", content="First chunk", embedding=[0.1, 0.2, 0.3]),
+        Chunk(id="c2", content="Second chunk", embedding=[0.11, 0.21, 0.31]),
+        Chunk(id="c3", content="Third chunk", embedding=[0.9, 0.8, 0.7]),
     ]
 
     service = KNNService(index_type="grid")
