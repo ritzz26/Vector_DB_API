@@ -1,10 +1,12 @@
 from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
-from app.services import chunk_service, knn_service
+from app.services import chunk_service
+from app.services.knn_service import KNNService
 from app.models.chunk import Chunk
 
 router = APIRouter(prefix="/search", tags=["search"])
+knn_service = KNNService(index_type="grid")
 
 class SearchQuery(BaseModel):
     library_id: str
@@ -17,5 +19,6 @@ def search(query: SearchQuery):
     if not chunks:
         raise HTTPException(status_code=404, detail="Library not found")
 
-    top_k = knn_service.knn_search(chunks, query.embedding, k=query.k)
+    knn_service.index_chunks_bulk(chunks)
+    top_k = knn_service.search(query.embedding, k=query.k)
     return [chunk for chunk, _ in top_k]
