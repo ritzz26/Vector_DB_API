@@ -5,9 +5,17 @@ from uuid import uuid4
 client = TestClient(app)
 
 def test_create_and_get_library():
+    """
+    Test creating a new library and retrieving it.
+    
+    Tests:
+        - POST /api/v1/libraries/ endpoint for creating a library
+        - GET /api/v1/libraries/{id} endpoint for retrieving a library
+        - Validates response status codes and data consistency
+    """
     lib_data = {
         "id": str(uuid4()),
-        "name": "Test Library",
+        "name": "Test Library", 
         "description": "Testing",
         "documents": [],
         "metadata": {}
@@ -22,6 +30,15 @@ def test_create_and_get_library():
     assert get_resp.json()["id"] == lib_data["id"]
 
 def test_add_document_to_library():
+    """
+    Test adding a document to a library.
+    
+    Tests:
+        - Creating a library
+        - POST /api/v1/libraries/{id}/documents/ endpoint for adding a document
+        - GET /api/v1/libraries/{id}/documents/{doc_id} endpoint for retrieving a document
+        - Validates response status codes and document data consistency
+    """
     lib_id = str(uuid4())
     client.post("/api/v1/libraries/", json={
         "id": lib_id,
@@ -46,6 +63,16 @@ def test_add_document_to_library():
     assert get_doc.json()["title"] == "Doc Title"
 
 def test_chunk_and_search():
+    """
+    Test adding a chunk to a document and searching for it.
+    
+    Tests:
+        - Creating a library and document
+        - POST /api/v1/libraries/{id}/documents/{doc_id}/chunks/ endpoint for adding a chunk
+        - POST /api/v1/search/ endpoint for searching chunks by embedding
+        - Validates response status codes, search results and chunk data consistency
+        - Verifies that search returns the correct chunk with matching embedding
+    """
     lib_id = str(uuid4())
     doc_id = str(uuid4())
     chunk_id = str(uuid4())

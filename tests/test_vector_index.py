@@ -3,6 +3,18 @@ import pytest
 
 @pytest.mark.parametrize("index_type", ["linear", "grid", "sorted"])
 def test_vector_index_manager(index_type):
+    """
+    Test the core functionality of the vector index manager.
+    
+    Tests:
+        - Creating vector index manager instances with different index types
+        - Adding vectors to the index
+        - Searching for nearest neighbors
+        - Verifying search results format and correctness
+        
+    Args:
+        index_type: The type of index to use ("linear", "grid", or "sorted")
+    """
     index = VectorIndexManager(index_type=index_type)
 
     index.add("v1", [0.1, 0.2, 0.3])
