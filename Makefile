@@ -25,7 +25,7 @@ run:
 	uvicorn app.main:app --reload --host 0.0.0.0 --port 8000
 
 test:
-	PYTHONPATH=. pytest tests/ && make clean
+	PYTHONPATH=. pytest --cov=app --cov-report=term tests/ && make clean
 
 docker-build:
 	docker build -t $(IMAGE_NAME) .
@@ -40,7 +40,11 @@ clean:
 	find . -type d -name '__pycache__' -exec rm -r {} +
 	find . -type f -name '*.pyc' -delete
 
-all: docker-build minikube-load helm-install port-forward
+all: docker-build minikube-start minikube-load helm-install port-forward
+
+minikube-start:
+	@echo "Starting Minikube"
+	minikube start
 
 minikube-load:
 	@echo "Loading Docker image into Minikube..."

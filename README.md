@@ -65,54 +65,49 @@ make test
 
 ## Docker Usage
 
-### Build the Image
+### Build and run
 
 ```bash
 make docker-build
-```
-
-### Run the Container
-
-```bash
 make docker-run
-```
-
-Access the API at:
-
-```
-http://localhost:8000/docs
 ```
 
 ---
 
 ## Kubernetes Deployment (Minikube)
 
-### Start Minikube
-
 ```bash
 minikube start
-```
-
-### Load Docker Image into Minikube
-
-```bash
 make minikube-load
-```
-
-### Deploy with Helm
-
-```bash
 make helm-install
-```
-
-### Access the API
-
-```bash
 make port-forward
 ```
 
 > Access at `http://localhost:8000/docs`
 
+---
+
+## Indexing Algorithms
+
+### 1. Linear Scan (Brute Force)
+- O(N) time, O(N) space
+- Best for small datasets
+
+### 2. Grid-based Index (Buckets)
+- O(1) lookup + local search
+- Fast for evenly distributed vectors
+
+### 3. Sorted List Index (by norm)
+- O(log N + K) query time
+- Good for structured data
+
+Choose index type per `KNNService`:
+
+```python
+KNNService(index_type="linear")
+KNNService(index_type="grid")
+KNNService(index_type="sorted")
+```
 ---
 
 ## Persistence
