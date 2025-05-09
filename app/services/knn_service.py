@@ -1,6 +1,5 @@
-# app/services/knn_service.py
-
 from app.services.vector_index import VectorIndexManager
+import app.services.chunk_service as chunk_srv
 from app.models.chunk import Chunk
 from typing import List, Tuple, Dict
 
@@ -37,21 +36,14 @@ class KNNService:
         for chunk in chunks:
             self.index_chunk(chunk)
 
+    def index_all_chunks_from_store(self):
+        all_libraries = chunk_srv.store.list_libraries()
+        for lib in all_libraries.values():
+            for doc in lib.documents:
+                for chunk in doc.chunks:
+                    if chunk.embedding:
+                        self.index_chunk(chunk)
 
-# Example usage
-if __name__ == "__main__":
-    from app.models.chunk import Chunk
 
-    chunks = [
-        Chunk(id="c1", content="First chunk", embedding=[0.1, 0.2, 0.3]),
-        Chunk(id="c2", content="Second chunk", embedding=[0.11, 0.21, 0.31]),
-        Chunk(id="c3", content="Third chunk", embedding=[0.9, 0.8, 0.7]),
-    ]
-
-    service = KNNService(index_type="grid")
-    service.index_chunks_bulk(chunks)
-
-    results = service.search([0.1, 0.2, 0.3], k=2)
-
-    for chunk, score in results:
-        print(f"Found: {chunk.id} with score {score}")
+# convert to singleton usage
+knn_service = KNNService(index_type="grid")
