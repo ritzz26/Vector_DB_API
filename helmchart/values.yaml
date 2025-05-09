@@ -10,3 +10,6 @@ service:
   port: 8000
 
 resources: {}
+
+cohereApiKey: ""  # not committed; override via `--set` in dev
+secretName: vector-db-api-secret

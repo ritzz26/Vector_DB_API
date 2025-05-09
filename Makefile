@@ -2,6 +2,7 @@ IMAGE_NAME=vector-db-api
 KUBE_NAMESPACE=default
 RELEASE_NAME=vector-db-api
 CHART_PATH=helmchart
+SECRET_NAME=vector-db-api-secret
 
 VENV=venv
 
@@ -57,3 +58,7 @@ port-forward:
 	@echo "Port-forwarding http://localhost:8000 ..."
 	@echo "Press Ctrl+C to stop."
 	kubectl port-forward svc/$(RELEASE_NAME) 8000:8000
+
+create-secret:
+	@echo "Created K8 secret $(SECRET_NAME)..."
+	kubectl create secret generic $(SECRET_NAME) -- from-literal=COHERE_API_KEY=$$COHERE_API_KEY --namespace $(KUBE_NAMESPACE)
