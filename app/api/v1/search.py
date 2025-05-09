@@ -2,11 +2,10 @@ from fastapi import APIRouter, HTTPException
 from pydantic import BaseModel
 from typing import List
 from app.services import chunk_service
-from app.services.knn_service import KNNService
+from app.services.knn_service import knn_service
 from app.models.chunk import Chunk
 
 router = APIRouter(prefix="/search", tags=["search"])
-knn_service = KNNService(index_type="grid")
 
 class SearchQuery(BaseModel):
     """

@@ -1,6 +1,8 @@
 from typing import Optional, List
 from app.models.chunk import Chunk
 from app.db import store
+from app.services.embedding_service import get_embedding
+from app.services.knn_service import knn_service
 
 def add_chunk(library_id: str, document_id: str, chunk: Chunk) -> bool:
     """
@@ -14,7 +16,11 @@ def add_chunk(library_id: str, document_id: str, chunk: Chunk) -> bool:
     Returns:
         bool: True if document was found and chunk added, False otherwise
     """
-    return store.add_chunk(library_id, document_id, chunk)
+    chunk.embedding = get_embedding(chunk.content)
+    success = store.add_chunk(library_id, document_id, chunk)
+    if success:
+        knn_service.index_chunk(chunk)
+    return success
 
 def delete_chunk(library_id: str, document_id: str, chunk_id: str) -> bool:
     """
