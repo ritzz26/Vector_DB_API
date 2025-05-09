@@ -81,6 +81,11 @@ docker run -p 8000:8000 vector-db-api
 ---
 
 ## Helm Deployment (Minikube)
+Start by exporting your API to your terminal:
+```bash
+export COHERE_API_KEY=<your_api_key>
+```
+And then you can run all the helm deployment commands using:
 ```bash
 make all
 ```

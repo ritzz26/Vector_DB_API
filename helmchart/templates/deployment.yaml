@@ -18,6 +18,12 @@ spec:
           imagePullPolicy: {{ .Values.image.pullPolicy }}
           ports:
             - containerPort: 8000
+          env:
+            - name: COHERE_API_KEY
+              valueFrom:
+                secretKeyRef:
+                  name: {{.Values.secretName}}
+                  key: COHERE_API_KEY
           resources: {{ toYaml .Values.resources | nindent 12 }}
           livenessProbe:
             httpGet:
@@ -31,3 +37,4 @@ spec:
               port: 8000
             initialDelaySeconds: 5
             periodSeconds: 10
+          

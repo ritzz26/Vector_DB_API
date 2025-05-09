@@ -2,6 +2,7 @@ IMAGE_NAME=vector-db-api
 KUBE_NAMESPACE=default
 RELEASE_NAME=vector-db-api
 CHART_PATH=helmchart
+SECRET_NAME=vector-db-api-secret
 
 VENV=venv
 
@@ -39,7 +40,7 @@ clean:
 	find . -type d -name '__pycache__' -exec rm -r {} +
 	find . -type f -name '*.pyc' -delete
 
-all: docker-build minikube-start minikube-load helm-install port-forward
+all: docker-build minikube-start minikube-load create-secret helm-install port-forward
 
 minikube-start:
 	@echo "Starting Minikube"
@@ -57,3 +58,14 @@ port-forward:
 	@echo "Port-forwarding http://localhost:8000 ..."
 	@echo "Press Ctrl+C to stop."
 	kubectl port-forward svc/$(RELEASE_NAME) 8000:8000
+
+create-secret:
+	@echo "Checking if Kubernetes secret $(SECRET_NAME) exists..."
+	@if ! kubectl get secret $(SECRET_NAME) --namespace $(KUBE_NAMESPACE) >/dev/null 2>&1; then \
+		echo "Secret does not exist. Creating $(SECRET_NAME)..."; \
+		kubectl create secret generic $(SECRET_NAME) \
+			--from-literal=COHERE_API_KEY=$$COHERE_API_KEY \
+			--namespace $(KUBE_NAMESPACE); \
+	else \
+		echo "Secret $(SECRET_NAME) already exists. Skipping creation."; \
+	fi
